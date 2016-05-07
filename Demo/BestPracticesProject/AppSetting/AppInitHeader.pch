@@ -1,0 +1,22 @@
+//
+//  AppInitHeader.pch
+//  BestPracticesProject
+//
+//  Created by A on 16/5/6.
+//  Copyright © 2016年 sy. All rights reserved.
+//
+
+#ifndef AppInitHeader_pch
+#define AppInitHeader_pch
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "ApiSetting.h"
+#import "TipsConst.h"
+#import "HttpTool.h"
+
+#import "Masonry.h"
+#import "MJExtension.h"
+#import "SVProgressHUD.h"
+#endif /* AppInitHeader_pch */
