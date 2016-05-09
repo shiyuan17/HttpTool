@@ -8,26 +8,29 @@
 
 #import "HttpTool.h"
 #import "AFNetworking.h"
-#import "TMCache.h"
-#import "NSString+MD5.h"
+#import "NSString+Password.h"
 #import "NSDictionary+Category.h"
+#import "NetWorkStatus.h"
+
 NSString *const HttpCacheArrayKey = @"HttpCacheArrayKey";
 NSString *const HttpExpiredCacheArrayKey = @"HttpExpiredCacheArrayKey";
+NSString *const HttpPasswordKey = @"GUIDKey";
 #define isbeforeIOS7 ([[[UIDevice currentDevice]systemVersion]floatValue] < 7.0?YES:NO)
+#define USER_DEFAULT [NSUserDefaults standardUserDefaults]
+#define NSStringIsNullOrEmpty(string) ({NSString *str=(string);(str==nil || [str isEqual:[NSNull null]] ||  str.length == 0 || [str isKindOfClass:[NSNull class]] || [[str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])?YES:NO;})
 
 static dispatch_source_t _timer;
 
 @implementation HttpTool
 + (void)initialize{
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [self regularlyCheckExpiredHttpCache];
 }
 
 #pragma mark - 网络请求前处理，无网络不请求
 +(BOOL)requestBeforeCheckNetWorkWithFailureBlock:(failureBlocks)errorBlock{
-    AFNetworkReachabilityStatus networkStatu=[AFNetworkReachabilityManager sharedManager].networkReachabilityStatus;
-    BOOL isFi;
-    if(networkStatu==AFNetworkReachabilityStatusNotReachable){//无网络
-        isFi = NO;
+    BOOL isFi=[NetWorkStatus isFi];
+    if(!isFi){//无网络
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if(errorBlock!=nil){
                 errorBlock(nil);
@@ -35,8 +38,7 @@ static dispatch_source_t _timer;
             }
         });
     }else{//有网络
-        isFi = YES;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [NetWorkStatus startNetworkActivity];
     }
     
     return isFi;
@@ -59,7 +61,7 @@ static dispatch_source_t _timer;
             NSString *cacheKey = [self getHttpCacheKeyWithUrl:url param:params];
             
             id obj;
-            obj = [[TMCache sharedCache] objectForKey:cacheKey];
+            obj = [self getCacheObj:cacheKey]; //[USER_DEFAULT objectForKey:cacheKey];
             if (obj) {
                 success(obj);
             }else{
@@ -198,13 +200,47 @@ static dispatch_source_t _timer;
     return encodePath;
 }
 
+#pragma mark - 加密/解密 缓存数据
+#pragma mark 获取对象解密key
++ (NSString *) getObjectDecryptionKey{
+    NSString *tmpStr = [USER_DEFAULT objectForKey:HttpPasswordKey];
+    if (NSStringIsNullOrEmpty(tmpStr)) {
+        NSString *guid = [NSString base64StringFromText:[NSString stringWithGUID]];
+        tmpStr = guid;
+        [USER_DEFAULT setObject:guid forKey:HttpPasswordKey];
+        [USER_DEFAULT synchronize];
+    }
+    return tmpStr;
+}
+
+#pragma mark 加密保存缓存对象
++ (void)saveCacheObj:(id)obj key:(NSString *)key{
+    NSString *objStr = [NSDictionary dictionaryToJson:obj];
+    NSString *pwdKey = [NSString textFromBase64String:[self getObjectDecryptionKey]];
+    NSString *desObjStr = [NSString DESEncryptSting:objStr key:pwdKey andDesiv:pwdKey];
+    
+    [USER_DEFAULT setObject:desObjStr forKey:key];
+    [USER_DEFAULT synchronize];
+}
+
+#pragma mark 解密取出来的缓存对象
++ (id)getCacheObj:(NSString *)key{
+    NSString *objStr = [USER_DEFAULT objectForKey:key];
+    if (objStr) {
+        NSString *pwdKey = [NSString textFromBase64String:[self getObjectDecryptionKey]];
+        NSString *decryptPwd = [NSString DESDecryptWithDESString:objStr key:pwdKey andiV:pwdKey];
+        NSDictionary *dicObj = [NSDictionary dictionaryWithJsonString:decryptPwd];
+        return dicObj;
+    }
+    return nil;
+}
 
 #pragma mark - 缓存
 #pragma mark 保存http缓存对象
 + (void)saveHttpCacheObjectWith:(NSString *)url param:(NSDictionary *)param expired:(HttpCacheExpiredTimeType)expiredType obj:(id)obj{
     NSString *md5CacheKey = [self getHttpCacheKeyWithUrl:url param:param];
     
-    [[TMCache sharedCache] setObject:obj forKey:md5CacheKey];
+    [self saveCacheObj:obj key:md5CacheKey];
     
     if (expiredType == HttpCacheExpiredTimeTypeNormal) {
         [self saveHttpCacheArrayWithKey:md5CacheKey];//保存cacheKey
@@ -227,38 +263,44 @@ static dispatch_source_t _timer;
 
 #pragma mark 保存http缓存对应的key 数组
 + (void)saveHttpCacheArrayWithKey:(NSString *)key{
-    NSMutableDictionary *cacheDic = [[TMCache sharedCache] objectForKey:HttpCacheArrayKey];
+    NSMutableDictionary *cacheDic = [USER_DEFAULT objectForKey:HttpCacheArrayKey];
     if (!cacheDic) {
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:key forKey:key];
         
-        [[TMCache sharedCache] setObject:dic forKey:HttpCacheArrayKey];
+        [USER_DEFAULT setObject:dic forKey:HttpCacheArrayKey];
+        [USER_DEFAULT synchronize];
     }else{
         id obj = [cacheDic objectForKey:key];
         if (!obj) {
             [cacheDic setObject:key forKey:key];
-            [[TMCache sharedCache] setObject:cacheDic forKey:HttpCacheArrayKey];
+            [USER_DEFAULT setObject:cacheDic forKey:HttpCacheArrayKey];
+            [USER_DEFAULT synchronize];
         }
         
     }
+    
 
 }
 
 #pragma mark 保存http过期缓存对应的key 数组
 + (void)saveHttpExpiredCacheArrayWithKey:(NSString *)key expired:(HttpCacheExpiredTimeType)expiredType{
-    NSMutableDictionary *cacheDic = [[TMCache sharedCache] objectForKey:HttpExpiredCacheArrayKey];
+    NSMutableDictionary *cacheDic = [USER_DEFAULT objectForKey:HttpExpiredCacheArrayKey];
     
     NSString *cacheKeyDate = [NSString stringWithFormat:@"%@,%ld",[[self getDateFormatter] stringFromDate:[NSDate date]],(long)expiredType];
     if (!cacheDic) {
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:cacheKeyDate forKey:key];
         
-        [[TMCache sharedCache] setObject:dic forKey:HttpExpiredCacheArrayKey];
+        [USER_DEFAULT setObject:dic forKey:HttpExpiredCacheArrayKey];
+        [USER_DEFAULT synchronize];
+        
     }else{
         id obj = [cacheDic objectForKey:key];
         if (!obj) {//判断是否已经保存了对应的key
             [cacheDic setObject:cacheKeyDate forKey:key];
-            [[TMCache sharedCache] setObject:cacheDic forKey:HttpExpiredCacheArrayKey];
+            [USER_DEFAULT setObject:cacheDic forKey:HttpExpiredCacheArrayKey];
+            [USER_DEFAULT synchronize];
         }
      
     }
@@ -267,22 +309,22 @@ static dispatch_source_t _timer;
 
 #pragma mark 清除本地http缓存
 + (void)clearAllLocalHttpCache:(clearHttpCacheBlock)block{
-    NSArray *arrs = (NSArray *)[[TMCache sharedCache] objectForKey:HttpCacheArrayKey];
+    NSArray *arrs = (NSArray *)[USER_DEFAULT objectForKey:HttpCacheArrayKey];
     for (NSString *key in arrs) {
-        [[TMCache sharedCache] removeObjectForKey:key];
+        [USER_DEFAULT removeObjectForKey:key];
     }
-    [[TMCache sharedCache] removeObjectForKey:HttpCacheArrayKey];
+    [USER_DEFAULT removeObjectForKey:HttpCacheArrayKey];
     
     block();
 }
 
 #pragma mark 清除所有http本地时间缓存
 + (void)clearAllLocalHttpTimeCache:(clearHttpExpiredCacheBlock)block{
-    NSArray *arrs = (NSArray *)[[TMCache sharedCache] objectForKey:HttpExpiredCacheArrayKey];
+    NSArray *arrs = (NSArray *)[USER_DEFAULT objectForKey:HttpExpiredCacheArrayKey];
     for (NSString *key in arrs) {
-        [[TMCache sharedCache] removeObjectForKey:key];
+        [USER_DEFAULT removeObjectForKey:key];
     }
-    [[TMCache sharedCache] removeObjectForKey:HttpExpiredCacheArrayKey];
+    [USER_DEFAULT removeObjectForKey:HttpExpiredCacheArrayKey];
     
     block();
 }
@@ -300,7 +342,7 @@ static dispatch_source_t _timer;
     
     dispatch_source_set_event_handler(_timer, ^{
         
-        NSDictionary *cacheDic = [[TMCache sharedCache] objectForKey:HttpExpiredCacheArrayKey];
+        NSDictionary *cacheDic = [USER_DEFAULT objectForKey:HttpExpiredCacheArrayKey];
         NSMutableDictionary *tmpDic = [NSMutableDictionary dictionaryWithDictionary:cacheDic];
         BOOL isEdit = NO;
         for (NSString *key in [cacheDic allKeys]) {
@@ -322,14 +364,15 @@ static dispatch_source_t _timer;
 //                int second = aTimer - hour*3600 - minute*60;
                 if (minute>=time) {
                     isEdit = YES;
-                    [[TMCache sharedCache] removeObjectForKey:key];
+                    [USER_DEFAULT removeObjectForKey:key];
                     [tmpDic removeObjectForKey:key];
                 }
             }
         }
         
         if (isEdit) {
-            [[TMCache sharedCache] setObject:tmpDic forKey:HttpExpiredCacheArrayKey];
+            [USER_DEFAULT setObject:tmpDic forKey:HttpExpiredCacheArrayKey];
+            [USER_DEFAULT synchronize];
         }
     });
     
