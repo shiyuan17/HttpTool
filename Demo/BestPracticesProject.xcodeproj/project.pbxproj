@@ -12,13 +12,15 @@
 		0015EB0D1CDDCABD0074690A /* ShoppingFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0015EB0C1CDDCABD0074690A /* ShoppingFooterView.m */; };
 		0054A4A41CDCA5EC00CD0DEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0054A4A31CDCA5EC00CD0DEB /* main.m */; };
 		0054A4AF1CDCA5EC00CD0DEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0054A4AE1CDCA5EC00CD0DEB /* Assets.xcassets */; };
+		007652AB1CE071C9000AE988 /* NetWorkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 007652AA1CE071C9000AE988 /* NetWorkStatus.m */; };
+		007652AF1CE071DA000AE988 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 007652AE1CE071DA000AE988 /* Reachability.m */; };
 		00A110E01CDD7630001F14E9 /* ShoppingParamModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A110DF1CDD7630001F14E9 /* ShoppingParamModel.m */; };
 		00A110E31CDD7701001F14E9 /* ShoppingLogicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 00A110E21CDD7701001F14E9 /* ShoppingLogicModel.m */; };
 		00F37E0F1CDCB12700114974 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E0C1CDCB12700114974 /* AppDelegate.m */; };
 		00F37E201CDCB1AD00114974 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E1F1CDCB1AD00114974 /* HomeViewController.m */; };
 		00F37E231CDCB1C700114974 /* HomeDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E221CDCB1C700114974 /* HomeDataManager.m */; };
 		00F37E961CDCB28600114974 /* NSDictionary+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E651CDCB28600114974 /* NSDictionary+Category.m */; };
-		00F37E971CDCB28600114974 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E671CDCB28600114974 /* NSString+MD5.m */; };
+		00F37E971CDCB28600114974 /* NSString+Password.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E671CDCB28600114974 /* NSString+Password.m */; };
 		00F37E981CDCB28600114974 /* HttpTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E691CDCB28600114974 /* HttpTool.m */; };
 		00F37E991CDCB28600114974 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E6D1CDCB28600114974 /* AFHTTPSessionManager.m */; };
 		00F37E9A1CDCB28600114974 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F37E701CDCB28600114974 /* AFNetworkReachabilityManager.m */; };
@@ -79,6 +81,10 @@
 		0054A4A31CDCA5EC00CD0DEB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0054A4AE1CDCA5EC00CD0DEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0054A4B31CDCA5EC00CD0DEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		007652A91CE071C9000AE988 /* NetWorkStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetWorkStatus.h; sourceTree = "<group>"; };
+		007652AA1CE071C9000AE988 /* NetWorkStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetWorkStatus.m; sourceTree = "<group>"; };
+		007652AD1CE071DA000AE988 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		007652AE1CE071DA000AE988 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		00A110DE1CDD7630001F14E9 /* ShoppingParamModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoppingParamModel.h; sourceTree = "<group>"; };
 		00A110DF1CDD7630001F14E9 /* ShoppingParamModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoppingParamModel.m; sourceTree = "<group>"; };
 		00A110E11CDD7701001F14E9 /* ShoppingLogicModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoppingLogicModel.h; sourceTree = "<group>"; };
@@ -91,8 +97,8 @@
 		00F37E221CDCB1C700114974 /* HomeDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeDataManager.m; sourceTree = "<group>"; };
 		00F37E641CDCB28600114974 /* NSDictionary+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Category.h"; sourceTree = "<group>"; };
 		00F37E651CDCB28600114974 /* NSDictionary+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Category.m"; sourceTree = "<group>"; };
-		00F37E661CDCB28600114974 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
-		00F37E671CDCB28600114974 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		00F37E661CDCB28600114974 /* NSString+Password.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Password.h"; sourceTree = "<group>"; };
+		00F37E671CDCB28600114974 /* NSString+Password.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Password.m"; sourceTree = "<group>"; };
 		00F37E681CDCB28600114974 /* HttpTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpTool.h; sourceTree = "<group>"; };
 		00F37E691CDCB28600114974 /* HttpTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpTool.m; sourceTree = "<group>"; };
 		00F37E6C1CDCB28600114974 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -249,6 +255,15 @@
 				0054A4A31CDCA5EC00CD0DEB /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		007652AC1CE071DA000AE988 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				007652AD1CE071DA000AE988 /* Reachability.h */,
+				007652AE1CE071DA000AE988 /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		00F37E0A1CDCB12700114974 /* AppDelegate */ = {
@@ -415,6 +430,8 @@
 			isa = PBXGroup;
 			children = (
 				00F37E631CDCB28600114974 /* Category */,
+				007652A91CE071C9000AE988 /* NetWorkStatus.h */,
+				007652AA1CE071C9000AE988 /* NetWorkStatus.m */,
 				00F37E681CDCB28600114974 /* HttpTool.h */,
 				00F37E691CDCB28600114974 /* HttpTool.m */,
 				00F37E6A1CDCB28600114974 /* Lib */,
@@ -427,8 +444,8 @@
 			children = (
 				00F37E641CDCB28600114974 /* NSDictionary+Category.h */,
 				00F37E651CDCB28600114974 /* NSDictionary+Category.m */,
-				00F37E661CDCB28600114974 /* NSString+MD5.h */,
-				00F37E671CDCB28600114974 /* NSString+MD5.m */,
+				00F37E661CDCB28600114974 /* NSString+Password.h */,
+				00F37E671CDCB28600114974 /* NSString+Password.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -436,6 +453,7 @@
 		00F37E6A1CDCB28600114974 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				007652AC1CE071DA000AE988 /* Reachability */,
 				00F37E6B1CDCB28600114974 /* AFNetworking */,
 				00F37E8E1CDCB28600114974 /* TMCache */,
 			);
@@ -666,7 +684,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00F37E971CDCB28600114974 /* NSString+MD5.m in Sources */,
+				00F37E971CDCB28600114974 /* NSString+Password.m in Sources */,
 				00F37EAA1CDCB28600114974 /* TMMemoryCache.m in Sources */,
 				00F37EDC1CDCBA6800114974 /* NSObject+MJProperty.m in Sources */,
 				00F37F031CDCBF5B00114974 /* MASCompositeConstraint.m in Sources */,
@@ -676,6 +694,7 @@
 				00F37ED81CDCBA6800114974 /* MJPropertyType.m in Sources */,
 				00F37F081CDCBF5B00114974 /* MASViewConstraint.m in Sources */,
 				00F37E9A1CDCB28600114974 /* AFNetworkReachabilityManager.m in Sources */,
+				007652AF1CE071DA000AE988 /* Reachability.m in Sources */,
 				00F37EB21CDCB9E700114974 /* TipsConst.m in Sources */,
 				00F37EA31CDCB28600114974 /* UIButton+AFNetworking.m in Sources */,
 				00F37EA01CDCB28600114974 /* AFImageDownloader.m in Sources */,
@@ -703,6 +722,7 @@
 				00F37E231CDCB1C700114974 /* HomeDataManager.m in Sources */,
 				00F37E9B1CDCB28600114974 /* AFSecurityPolicy.m in Sources */,
 				00F37EDB1CDCBA6800114974 /* NSObject+MJKeyValue.m in Sources */,
+				007652AB1CE071C9000AE988 /* NetWorkStatus.m in Sources */,
 				00F37E9C1CDCB28600114974 /* AFURLRequestSerialization.m in Sources */,
 				0015EB031CDD981B0074690A /* ShoppingCell.m in Sources */,
 				00F37F0C1CDCBF5B00114974 /* ViewController+MASAdditions.m in Sources */,

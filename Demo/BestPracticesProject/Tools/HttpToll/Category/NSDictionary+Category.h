@@ -24,4 +24,8 @@
  *  @return 转换后的json字符串，失败则为{}
  */
 + (NSString *)dictionaryToJson:(NSDictionary *)dictionary;
+
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;/**<json转dic*/
+
+
 @end
